@@ -1,0 +1,164 @@
+
+.catalog{
+	display:flex;
+	flex-wrap:no-wrap;
+		list-style:none;
+		padding-bottom:20px;
+		padding-top:20px;
+		width:1500px;
+		
+	
+}
+.catalog a{
+	text-decoration:none;
+	color:#ffffff;
+}
+
+.ul-1{
+	display:flex;
+	flex-wrap:wrap;
+		list-style:none;
+				color:#ffffff;
+		background-color:#131313;
+				margin:0 auto;
+	padding:0px;
+}
+.nav {
+	display:flex;
+	margin-bottom:0 auto;
+	padding:0px;
+	width:1500px;
+}
+.u{
+	background-color:#302f2f;
+
+}
+.q{
+	margin-top:50px;
+	margin-left:50px;
+	
+	
+}
+.img-1{
+	width:300px;
+	height:200px;
+	margin-right:60px;
+}
+.e{
+	margin-left:275px;
+	margin-right:0px
+}
+.r{
+	margin-left:300px;
+	margin-right:480px
+}                                                                                                    
+.main{
+	display:flex;
+	margin:0px auto;
+	padding:0;
+	width:1500px;
+}
+.projects{
+	    text-align: justify;
+		background-color:#302f2f;
+		color:#FF4500;
+				margin-top:0 ;
+	margin-bottom:0 ;
+	margin-right:20px;
+	width:160px;
+}
+.y{
+	padding-top:20px;
+	padding-bottom:20px;
+	padding-right:40px;
+	font-size: 20px;
+	list-style:none;
+}
+.y a{
+text-decoration:none;
+color:#ffffff;
+}
+.t{
+	margin-left:30px;
+		font-size: 18px;
+}
+.footer{
+	font-size: 20px;
+	padding-left:250px;
+	background-color:#302f2f;
+	padding-top:20px;
+	padding-bottom:20px;
+	color:#ffffff;
+	width:1300px;
+}
+.footer a{
+	text-decoration:none;
+	color:#ffffff;
+	
+}
+.projects1{
+	    text-align: justify;
+		background-color:#302f2f;
+		color:#302f2f;
+				margin-top:0 ;
+	margin-bottom:0 ;
+	margin-right:20px;
+	width:200px;
+}
+.img2{
+	margin-top:20px;
+	margin-left:100px;
+	width:200px;
+	height:250px;
+}
+.img4{
+		width:180px;
+	height:180px;
+}
+.img3{
+		width:180px;
+	height:180px;
+}
+.img5{
+	width:280px;
+	height:200px;
+}
+.img6{
+	margin-top:20px;
+	margin-left:100px;
+	width:250px;
+	height:250px;
+}
+.img7{
+	margin-top:20px;
+	margin-left:100px;
+	width:275px;
+	height:275px;
+}
+.img8{
+	width:275px;
+	height:275px;
+}
+.z{
+	display:flex;
+}
+.n{
+	margin-top:50px;
+}
+.m{
+	margin-top:20px;
+}
+.img11{
+	width:20 px;
+	height:20 px;
+	margin-left:10px;
+	margin-right:10px;
+}
+.img10{
+	margin-left:10px;
+	margin-right:10px;	
+}
+.main1{
+	width:1350px;
+	display:flex;
+}

@@ -1,0 +1,110 @@
+<!Doctype html>
+<html lang="ru">
+	<head>
+	<title>Мой проект</title>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<header class="head">
+			<nav class="nav">
+				<ul class="ul-1">
+					<li class="w"><img class="img-1" src="img/logo.jpg"></li>
+					<li class="q"><h1>Интересные проекты на arduino</h1></li>
+			<div class="u">	<ul class="catalog">
+					<li class="e"><a href="glavnaya.html">О проекте</a></li>
+					<li class="r"><a href="Arduino.html">ARDUINO</a></li>
+				</ul></div></ul>
+			</nav>
+		</header>
+		<main class="main">
+			
+			<ul class="projects">
+				<li class="y"><a href="Zamock.html">Умный замок</a></li>
+				<li class="y"><a href="Метеостанция.html">Метеостанция</a></li>
+				<li class="y"><a href="Svet.html">Умный свет</a></li>
+				<li class="y"><a href="rgb.html">rgb лента</a></li>
+				<li class="y"><a href="kod.html">кодовый замок</a></li>
+				</ul>
+				<div class="t">
+				<div class="z">
+				<div class="x">
+						<h1>Кодовый замок</h1>
+						<p>Для создания кодового замка понадобится:</p>
+						<ol>
+							<li>Arduino nano</li>
+							<li>матричная клавиатура</li>
+							<li>батарейка питания</li>
+						</ol>
+				</div>
+				<div class="m">
+					<img class="img8" src="img/matrix.jpg">	
+				</div>
+				</div>
+				<h3>Принцип работы</h3>
+				<p>Принцип работы заключается втом что при помощи матричной клавитуры 4х4 будет набираться код, состоящий из цифр. Набраный код будет выводиться в serial порт. После нажатия определённой кнопки будет сравниваться правильный код с введёным.</p>
+				<h3>Схема подключения:</h3>
+				<img src="img/matrix.PNG">	
+				<h3>Прогромирование</h3>
+			
+				<p>Для прогромирования понадобится  <a href="https://iarduino.ru/file/18.html">библиотека</a> для работы с матричной клавиатурой.</p>
+				<p></p>
+				<h3>Кодс пояснениями:</h3>
+<code><pre>
+#include &ltKeypad.h&gt   // Подключение библиотеки Keypad
+ 
+const byte ROWS = 4;   // Количество рядов 
+const byte COLS = 4;   // Количество строк 
+ 
+char keys[ROWS][COLS] = 
+{
+  {'1','2','3','A'},
+  {'4','5','6','B'},
+  {'7','8','9','C'},
+  {'*','0','#','D'}
+};
+ 
+byte rowPins[ROWS] = {9, 8, 7, 6}; // Выводы, подключение к строкам
+byte colPins[COLS] = {5, 4, 3, 2}; // Выводы, подключение к столбцам  
+byte trueKey[4]={0,0,0,0};//правильный четырёхзначный  код
+byte key1[4]={0,0,0,0};//текущий код
+int step=0;//каккой символ по счету вводится
+Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
+ 
+void setup()
+{
+  Serial.begin(9600); // Открываем последовательную связь на скорости 9600
+}
+  
+void loop(){
+  char key = keypad.getKey();  // Читаем состояние кнопок
+
+   if (key){
+    key1[step]=int(key);//записываем в массив считаный знак
+    step++;//прибавляем шаг
+    if (key=="D"){//если нажата клавиша для проверки кода
+      int check=1;//вспомогательная перемнная
+      for(int i=0; i<=3; i++){//цикл на 4 шага
+          if (key1[i]!=trueKey[i]){//сравниваем массивы
+              check=0;//если элементы массивов не совпали
+          }
+      }
+      if (check==1){//если масивы совпали
+          Serial.print("true");
+      }
+      else{//если массивы не совпали
+        Serial.print("false");
+      }
+        
+    }
+    Serial.print("Key Pressed : ");
+    Serial.println(key);
+  }
+}
+			</pre></code>
+			</div>
+		</main>
+		<footer class="footer">
+			Если вы хотите что-то изменить в моем сайте или нашли ошибку, то можете написать мне в <a href="">Telegram</a>
+		</footer>
+	</body>
+</html>

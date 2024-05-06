@@ -1,0 +1,72 @@
+<!Doctype html>
+<html lang="ru">
+	<head>
+	<title>Мой проект</title>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<header class="head">
+			<nav class="nav">
+				<ul class="ul-1">
+					<li class="w"><img class="img-1" src="img/logo.jpg"></li>
+					<li class="q"><h1>Интересные проекты на arduino</h1></li>
+			<div class="u">	<ul class="catalog">
+					<li class="e"><a href="glavnaya.html">О проекте</a></li>
+					<li class="r"><a href="Arduino.html">ARDUINO</a></li>
+				</ul></div></ul>
+			</nav>
+		</header>
+		<main class="main">
+			
+			<ul class="projects">
+				<li class="y"><a href="Zamock.html">Умный замок</a></li>
+				<li class="y"><a href="Метеостанция.html">Метеостанция</a></li>
+				<li class="y"><a href="Svet.html">Умный свет</a></li>
+				<li class="y"><a href="rgb.html">rgb лента</a></li>
+				<li class="y"><a href="kod.html">кодовый замок</a></li>
+				</ul>
+				<div class="t"><div class="z"><div class="x">
+						<h1>rgb лента</h1>
+			<p>Для создания rgb ленты понадобится:</p>
+			<ol>
+				<li>Arduino nano</li>
+				<li>rgb лента</li>
+				<li>внешний блок питания на 5 вольт для ргб ленты</li>
+				<li>батарейка питания</li>
+				</ol></div>
+				<img class="img7"src="img/rgb.jpg">
+				</div>
+			<h3>Принцип работы</h3>
+			<p>Принцип работы заключается втом что в программе создаётся массив цветов, каждый элемент которого адресуется отдельному светодиоду</p>
+			<h3>Схема подключения:</h3>
+			<img src="img/rgb.PNG">	
+			<h3>Прогромирование</h3>
+			<p>Для прогромирования понадобится библиотека <a href="https://github.com/FastLED/FastLED">FastLed</a> для работы с ргб лентами.</p>
+			<p></p>
+			<h3>Код с пояснениями:</h3>
+			<code><pre>
+#define NUM_LEDS XX	//кол-во светодиодов в ленте
+#include "FastLED.h"
+#define PIN 2 //пин ленты
+CRGB leds[NUM_LEDS];
+byte counter;
+void setup() {
+  FastLED.addLeds<WS2811, PIN, GRB>(leds, NUM_LEDS).setCorrection( TypicalLEDStrip );
+  FastLED.setBrightness(50);
+  pinMode(2, OUTPUT);
+}
+void loop() {
+  for (int i = 0; i < NUM_LEDS; i++ ) {         // от 0 до первой трети
+    leds[i] = CHSV(counter + i * 2, 255, 255);  // HSV. Увеличивать HUE (цвет)
+    // умножение i уменьшает шаг радуги
+  }
+  counter++;        // counter меняется от 0 до 255 (тип данных byte)
+  FastLED.show();
+  delay(5);         // скорость движения радуги
+}</pre></code></div>
+		</main>
+		<footer class="footer">
+			Если вы хотите что-то изменить в моем сайте или нашли ошибку, то можете написать мне в <a href="">Telegram</a>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,250 @@
+#include <SPI.h>
+#include <MFRC522.h>
+#define RST_PIN         9        // Пин rfid модуля RST
+#define SS_PIN          10       // Пин rfid модуля SS
+MFRC522 rfid(SS_PIN, RST_PIN);   // Объект rfid модуля
+MFRC522::MIFARE_Key key;         // Объект ключа
+MFRC522::StatusCode status;      // Объект статуса
+void setup() {
+  Serial.begin(9600);              // Инициализация Serial
+  SPI.begin();                     // Инициализация SPI
+  rfid.PCD_Init();                 // Инициализация модуля
+  rfid.PCD_SetAntennaGain(rfid.RxGain_max);  // Установка усиления антенны
+  rfid.PCD_AntennaOff();           // Перезагружаем антенну
+  rfid.PCD_AntennaOn();            // Включаем антенну
+  for (byte i = 0; i < 6; i++) {   // Наполняем ключ
+    key.keyByte[i] = 0xFF;         // Ключ по умолчанию 0xFFFFFFFFFFFF
+  }
+  pinMode(2, OUTPUT);//светодиод
+  pinMode(3, OUTPUT);//зуммер
+}
+byte trueKey[4]={0xXX, 0xXX, 0xXX, 0xXX};//правильный ключ
+void loop() {
+  
+  // Занимаемся чем угодно
+  
+  static uint32_t rebootTimer = millis(); // Важный костыль против зависания модуля!
+  if (millis() - rebootTimer >= 1000) {   // Таймер с периодом 1000 мс
+    rebootTimer = millis();               // Обновляем таймер
+    digitalWrite(RST_PIN, HIGH);          // Сбрасываем модуль
+    delayMicroseconds(2);                 // Ждем 2 мкс
+    digitalWrite(RST_PIN, LOW);           // Отпускаем сброс
+    rfid.PCD_Init();                      // Инициализируем заного
+  }
+  if (!rfid.PICC_IsNewCardPresent()) return;  // Если новая метка не поднесена - вернуться в начало loop
+  if (!rfid.PICC_ReadCardSerial()) return;    // Если метка не читается - вернуться в начало loop
+  int key=1;//вспомогательныя переменная
+    byte uid=1;//вспомогательная переменная
+     for (int i =0;i<=3; i++){//цикл на 4 шага
+      uid=rfid.uid.uidByte[i];
+      if(trueKey[i]!=uid){//проверяем прочитанный UID  справильным по байтам
+        key=0;
+  if key==1{//если прочитанный UID совпал с правильным
+    digitalWrite(2,1);//включаем светодиод
+    tone(3,890);//включаем зуммер
+    delay(1000);//пауза 1 секунда
+    noTone(3);//выключаем зуммер
+    digitalWrite(2,0);//выключаем светодиод
+  }
+  else{////если прочитанный UID не совпал с правильным
+    tone(3,100);//включаем зуммер
+    delay(1000);//пауза 1 секунда
+    noTone(3);//выключаем зуммер
+  }
+  Serial.print("UID: ");
+  for (uint8_t i = 0; i < 4; i++) {           // Цикл на 4 итерации
+    Serial.print("0x");                       // В формате HEX
+    Serial.print(rfid.uid.uidByte[i], HEX);   // Выводим UID по байтам
+    Serial.print(", ");
+  }
+  Serial.println("");
+}
+
+
+
+
+
+
+
+#define NUM_LEDS 144
+#include "FastLED.h"
+#define PIN 2
+CRGB leds[NUM_LEDS];
+byte counter;
+void setup() {
+  FastLED.addLeds<WS2811, PIN, GRB>(leds, NUM_LEDS).setCorrection( TypicalLEDStrip );
+  FastLED.setBrightness(50);
+  pinMode(13, OUTPUT);
+}
+void loop() {
+  for (int i = 0; i < NUM_LEDS; i++ ) {         // от 0 до первой трети
+    leds[i] = CHSV(counter + i * 2, 255, 255);  // HSV. Увеличивать HUE (цвет)
+    // умножение i уменьшает шаг радуги
+  }
+  counter++;        // counter меняется от 0 до 255 (тип данных byte)
+  FastLED.show();
+  delay(5);         // скорость движения радуги
+}
+
+
+
+
+
+
+
+
+boolean statuslamp; // состояние лампы: true - включено, false - выключено
+
+void setup() {
+   pinMode(2,OUTPUT); // пин 2 со светодиодом будет выходом (англ. «output»)
+   pinMode(A0,INPUT); // к аналоговому входу A0 подключим датчик (англ. «intput»)
+   statuslamp=false; // начальное состояние - лампа выключена
+   Serial.begin(9600); // подключаем монитор порта
+}
+
+void loop() {
+   Serial.println (analogRead(A0)); // выводим значение датчика на монитор
+  
+   if(analogRead(A0)>60) {
+      statuslamp=!statuslamp; // меняем статус лампы при регистрации хлопка
+      digitalWrite(2,statuslamp); // переключаем светодиод на выходе 12
+      delay(20); // задержка, "дребезга" хлопков
+   }
+}
+
+
+
+
+
+
+
+#include <Keypad.h>    // Подключение библиотеки Keypad
+ 
+const byte ROWS = 4;   // Количество рядов 
+const byte COLS = 4;   // Количество строк 
+ 
+char keys[ROWS][COLS] = 
+{
+  {'1','2','3','A'},
+  {'4','5','6','B'},
+  {'7','8','9','C'},
+  {'*','0','#','D'}
+};
+ 
+byte rowPins[ROWS] = {9, 8, 7, 6}; // Выводы, подключение к строкам
+byte colPins[COLS] = {5, 4, 3, 2}; // Выводы, подключение к столбцам  
+byte trueKey[4]={0,0,0,0};//правильный четырёхзначный  код
+byte key1[4]={0,0,0,0};//текущий код
+int step=0;//каккой символ по счету вводится
+Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
+ 
+void setup()
+{
+  Serial.begin(9600); // Открываем последовательную связь на скорости 9600
+}
+  
+void loop(){
+  char key = keypad.getKey();  // Читаем состояние кнопок
+
+   if (key){
+    key1[step]=int(key);//записываем в массив считаный знак
+    step++;//прибавляем шаг
+    if (key=="D"){//если нажата клавиша для проверки кода
+      int check=1;//вспомогательная перемнная
+      for(int i=0; i<=3; i++){//цикл на 4 шага
+          if (key1[i]!=trueKey[i]){//сравниваем массивы
+              check=0;//если элементы массивов не совпали
+          }
+      }
+      if (check==1){//если масивы совпали
+          Serial.print("true");
+      }
+      else{//если массивы не совпали
+        Serial.print("false");
+      }
+        
+    }
+    Serial.print("Key Pressed : ");
+    Serial.println(key);
+  }
+}
+
+
+
+
+
+#include <SFE_BMP180.h>
+#include <Wire.h>
+
+SFE_BMP180 pressure;                          // Объявляем переменную для доступа к SFE_BMP180
+
+#include "DHT.h"
+#define DHTPIN 2 // Тот самый номер пина, о котором упоминалось выше
+// Одна из следующих строк закоментирована. Снимите комментарий, если подключаете датчик DHT11 к arduino
+DHT dht(DHTPIN, DHT22); //Инициация датчика
+//DHT dht(DHTPIN, DHT11);
+void setup()
+{
+ Serial.begin(9600);                          // Задаем скорость передачи данных
+ Serial.println("REBOOT");                    // Вывод текста "Перезагрузка"
+    dht.begin();
+ if(pressure.begin())                         // Инициализация датчика
+     Serial.println("BMP180 init success");   // Вывод текста "BMP180 подключен"
+   else{                                      // В противном случаи, датчик не подключен
+     Serial.println("BMP180 init fail\n\n");  // Вывод текста "BMP180 не подключен"
+     while(1);                                // Пауза.
+       }
+}
+
+void loop()
+{
+  char status;
+  double T,P,p0,a;
+
+/* Так как давление зависит от температуры, надо сначало узнать температуру 
+ * Считывание температуры занимает какоето время. 
+ * Если все хорошо, функция pressure.startTemperature вернет status с количеством милисикунд
+ * которые нужно подождать. Ксли какае то проблема, то функция вернет 0.
+*/
+
+  status = pressure.startTemperature();       // Считывание показания
+  if(status!=0){                              // Если значение status не 0, выполняем следующию команду.
+     delay(status);                           // Ждем     
+     status = pressure.getTemperature(T);     // Полученые показания, сохраняем в переменную T
+      if(status!=0){                          // Если все хорошо, функция вернет 1, иначе вернет 0
+         Serial.print("Temperature: ");       // Вывод текста "Температура"
+         Serial.print(T,2);                   // Вывод показания переменной "Т"
+         Serial.println(" C, ");              // Вывод текста "С"
+
+/* Определяем показания атмосферного давления
+ * Параметр указывает расширение, от 0 до 3 (чем больше расширение, тем больше точность, тем долше ждать)
+ * Если все хорошо, функция pressure.startTemperature вернет status с количеством милисикунд
+ * которые нужно подождать. Если какая то проблема, то функция вернет 0.
+*/
+
+  status = pressure.startPressure(3);         // Считывание показания
+  if(status!=0){                              // Если значение status не 0, выполняем следующию команду.
+     delay(status);                           // Ждем
+     status = pressure.getPressure(P,T);      // Полученные показания, сохраняем в переменную P
+      if(status!=0){                          // Если все хорошо, функция вернет 1, иначе вернет 0 
+         Serial.print("Absolute pressure: "); // Вывод текста "Атмосферное давление"
+          Serial.print(P,2);                  // Вывод показания переменной mBar
+          Serial.print(" mbar, ");            // ПВывод текста "mBar"
+          Serial.print(P*0.7500637554192,2);  // Вывод показания в mmHg
+          Serial.println(" mmHg");}           // Вывод текста "mmHg"
+
+  else Serial.println("error retrieving pressure measurement\n");}    // Ошибка получения давления
+  else Serial.println("error starting pressure measurement\n");}      // Ошибка запуска получения давления
+  else Serial.println("error retrieving temperature measurement\n");} // Ошибка получения температуры
+  else Serial.println("error starting temperature measurement\n");    // Ошибка запуска получения температуры
+  float h = dht.readHumidity(); //Измеряем влажность
+  float t = dht.readTemperature(); //Измеряем температуру
+  if (isnan(h) || isnan(t)) {  // Проверка. Если не удается считать показания, выводится «Ошибка считывания», и программа завершает работу
+    Serial.println("Ошибка считывания");
+    return;
+  }
+  Serial.print("Влажность: ");
+  Serial.print(h);
+  Serial.print(" %\t");
+  delay(5000);                                                        // Пауза в 5с
+}

@@ -1,0 +1,75 @@
+<!Doctype html>
+<html lang="ru">
+	<head>
+	<title>Мой проект</title>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<header class="head">
+			<nav class="nav">
+				
+				<ul class="ul-1">
+					<li class="w"><img class="img-1" src="img/logo.jpg"></li>
+					<li class="q"><h1>Интересные проекты на arduino</h1></li>
+				<div class="u"><ul class="catalog">
+					<li class="e"><a href="glavnaya.html">О проекте</a></li>
+					<li class="r"><a href="Arduino.html">ARDUINO</a></li>
+				</ul></div></ul>
+			</nav>
+		</header>
+		<main class="main">
+			
+			<ul class="projects">
+				<li class="y"><a href="Zamock.html">Умный замок</a></li>
+				<li class="y"><a href="Метеостанция.html">Метеостанция</a></li>
+				<li class="y"><a href="Svet.html">Умный свет</a></li>
+				<li class="y"><a href="rgb.html">rgb лента</a></li>
+				<li class="y"><a href="kod.html">кодовый замок</a></li>
+				</ul>
+				<div class="t"><div class="z"><div class="x">
+					<h1>Умный свет</h1>
+			<p>Для создания умного света понадобится:</p>
+			<ol>
+				<li>Arduino nano</li>
+				<li>Датчик звука</li>
+				<li>батарейка питания</li>
+				<li>Светодиод</li>
+				</ol></div>
+				<img class="img6"src="img/sound.jpg">
+				</div>
+			<h3>Принцип работы</h3>
+			<p>Принцип работы заключается в том что при хлопке или щелчку пальцев достаточной громкости будет загораться или потузать светодиод. Так же можно вместо светодиода использовать лампочку 220 вольт, но для этого нужно будет подключать реле.</p>
+			<h3>Схема подключения:</h3>
+			<img src="img/svetPNG.PNG">
+			<h3>Прогромирование</h3>
+				
+			<p>Для прогромирования нам не понадобятся стороннии библиотеки</p>
+			<p></p>
+			<h3>Код с пояснениями:</h3>
+			<code><pre>
+boolean statuslamp; // состояние лампы: true - включено, false - выключено
+
+void setup() {
+   pinMode(2,OUTPUT); // пин 2 со светодиодом будет выходом (англ. «output»)
+   pinMode(A0,INPUT); // к аналоговому входу A0 подключим датчик (англ. «intput»)
+   statuslamp=false; // начальное состояние - лампа выключена
+   Serial.begin(9600); // подключаем монитор порта
+}
+
+void loop() {
+   Serial.println (analogRead(A0)); // выводим значение датчика на монитор
+  
+   if(analogRead(A0)>60) {
+      statuslamp=!statuslamp; // меняем статус лампы при регистрации хлопка
+      digitalWrite(2,statuslamp); // переключаем светодиод на выходе 12
+      delay(20); // задержка, "дребезга" хлопков
+   }
+}
+</pre></code>
+			</div>
+		</main>
+		<footer class="footer">
+			Если вы хотите что-то изменить в моем сайте или нашли ошибку, то можете написать мне в <a href="">Telegram</a>
+		</footer>
+	</body>
+</html>
